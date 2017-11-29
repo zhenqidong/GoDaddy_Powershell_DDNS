@@ -16,7 +16,6 @@
 # Get a key and secret for the production server
 
 # Check an A record and a domain are both specified on the command line.
-
 if [ $# -ne 3 ]; then
     echo "usage: $0 type a_record domain_name"
     echo "usage: $0 AAAA www my_domain"
@@ -24,29 +23,19 @@ if [ $# -ne 3 ]; then
 fi
 
 # Set A record and domain to values specified by user
-
 type=$1     # name of A record to update
 name=$2     # name of A record to update
 domain=$3   # name of domain to update
+cache=/tmp/.updategodaddy.$1.addr
+[ -e $cache ] && old=`cat $cache`
 
 # Modify the next two lines with your key and secret
-
 key=""      # key for godaddy developer API
 secret=""   # secret for godaddy developer API
 
 headers="Authorization: sso-key $key:$secret"
 
 #echo $headers
-
-result=$(curl -s -k -X GET -H "$headers" \
- "https://api.godaddy.com/v1/domains/$domain/records/$type/$name")
-
-if [ $type = "AAAA" ]; then
-        dnsIp=$(echo $result | grep -oE "\b([0-9a-fA-F]{0,4}|0)(\:([0-9a-fA-F]{0,4}|0)){7}\b")
-else
-        dnsIp=$(echo $result | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
-fi
-echo $name"."$domain": $(date): $type: dnsIp:" $dnsIp
 
 # Check for A or AAAA record to get different ip address
 if [ $type = "AAAA" ]; then
@@ -57,7 +46,28 @@ else
         ret=$(curl -s GET "http://ipinfo.io/json")
         currentIp=$(echo $ret | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
 fi
-echo $name"."$domain": $(date): $type: currentIp:" $currentIp
+# Check empty ip address or not
+if [ -z "$currentIp" ]; then
+        echo $name"."$domain": $(date): no ip address, program exit"
+        exit 1
+fi
+# Check cache ip, if matched, program exit
+if [ "$old" = "$currentIp" ]; then
+        echo $name"."$domain": $(date): address unchanged, program exit $currentIp"
+        exit
+else
+        echo $name"."$domain": $(date): $type: currentIp:" $currentIp
+fi
+
+#Get dns ip
+result=$(curl -s -k -X GET -H "$headers" \
+ "https://api.godaddy.com/v1/domains/$domain/records/$type/$name")
+if [ $type = "AAAA" ]; then
+        dnsIp=$(echo $result | grep -oE "\b([0-9a-fA-F]{0,4}|0)(\:([0-9a-fA-F]{0,4}|0)){7}\b")
+else
+        dnsIp=$(echo $result | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
+fi
+echo $name"."$domain": $(date): $type: dnsIp:" $dnsIp
 
 # ip not match
 if [ $dnsIp != $currentIp ];
