@@ -4,6 +4,8 @@
 #
 # Original PowerShell script by mfox: https://github.com/markafox/GoDaddy_Powershell_DDNS
 # Ported to bash by sanctus
+# Added AAAA record by Binny Chan
+#
 # Improved to take command line arguments and output information for log files by pollito
 #
 # First go to GoDaddy developer site to create a developer account and get your key and secret
