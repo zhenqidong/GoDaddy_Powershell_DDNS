@@ -46,7 +46,7 @@ if [ $type = "AAAA" ]; then
 else
         dnsIp=$(echo $result | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
 fi
-echo $name"."$domain": $(date): dnsIp:" $dnsIp
+echo $name"."$domain": $(date): $type: dnsIp:" $dnsIp
 
 # Check for A or AAAA record to get different ip address
 if [ $type = "AAAA" ]; then
@@ -57,12 +57,12 @@ else
         ret=$(curl -s GET "http://ipinfo.io/json")
         currentIp=$(echo $ret | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
 fi
-echo $name"."$domain": $(date): currentIp:" $currentIp
+echo $name"."$domain": $(date): $type: currentIp:" $currentIp
 
 # ip not match
 if [ $dnsIp != $currentIp ];
  then
-        echo $name"."$domain": $(date): IPs not equal. Updating."
+        echo $name"."$domain": $(date): $type: IPs not equal. Updating."
         request='{"data":"'$currentIp'","ttl":3600}'
         #echo $request
         nresult=$(curl -i -k -s -X PUT \
@@ -70,4 +70,5 @@ if [ $dnsIp != $currentIp ];
  -H "Content-Type: application/json" \
  -d $request "https://api.godaddy.com/v1/domains/$domain/records/$type/$name")
         #echo $nresult
+        echo $name"."$domain": $(date): $type: IPs not equal. Updated."
 fi
