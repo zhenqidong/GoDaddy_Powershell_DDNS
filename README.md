@@ -11,6 +11,6 @@ https://developer.godaddy.com/getstarted
 
 Sample for crontab
 
-#*/15    *       *       *       *       /usr/local/bin/updategodaddy.sh www mydomain.com >> /var/log/updatedomain.log
+#*/15    *       *       *       *       /usr/local/bin/updategodaddy.sh AAAA www mydomain.com >> /var/log/updatedomain.log
 
 Reference by GoDaddy_Powershell_DDNS
