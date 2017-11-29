@@ -26,7 +26,7 @@ fi
 type=$1     # name of A record to update
 name=$2     # name of A record to update
 domain=$3   # name of domain to update
-cache=/tmp/.updategodaddy.$1.addr
+cache=/tmp/.updategodaddy.$type.$name.$domain.addr
 [ -e $cache ] && old=`cat $cache`
 
 # Modify the next two lines with your key and secret
