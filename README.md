@@ -8,3 +8,8 @@ You will need a GoDaddy developer account.
 Go to GoDaddy developer site to create a developer account and get your key and secret
 
 https://developer.godaddy.com/getstarted
+
+
+Simple for Crontab
+#minute hour    mday    month   wday    command
+#*/15    *       *       *       *       /usr/local/bin/updategodaddy.sh www mydomain.com >> /var/log/updatedomain.log
