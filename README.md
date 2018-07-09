@@ -14,3 +14,7 @@ Sample for crontab
 #*/15    *       *       *       *       /usr/local/bin/updategodaddy.sh AAAA www mydomain.com >> /var/log/updatedomain.log
 
 Reference by GoDaddy_Powershell_DDNS
+
+# Issues:
+
+-d provided data should be a json array, otherwise api errors out, so $request='[{"data":"1.1.1.1"}]'
