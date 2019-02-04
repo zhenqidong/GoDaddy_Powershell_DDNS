@@ -17,4 +17,5 @@ Reference by GoDaddy_Powershell_DDNS
 
 # Issues:
 
--d provided data should be a json array, otherwise api errors out, so $request='[{"data":"1.1.1.1"}]'
+  1. -d provided data should be a json array, otherwise api errors out, so $request='[{"data":"1.1.1.1"}]'  
+  2. usage: app $type $name $domain. the name has to be defined for this script to be executed successfully, otherwise it'll error out instead of giving out an information.
